@@ -8,9 +8,9 @@ package main
 import (
     "context"
 
-	"github.com/go-oauth2/oauth2/v4"
-	"github.com/go-oauth2/oauth2/v4/models"
-	"github.com/hazelcast/hazelcast-go-client"
+    "github.com/go-oauth2/oauth2/v4"
+    "github.com/go-oauth2/oauth2/v4/models"
+    "github.com/hazelcast/hazelcast-go-client"
 
     "github.com/clowre/go-oauth2-hazelcast"
 )
@@ -26,9 +26,9 @@ func main() {
 
     store, err := hcstore.NewTokenStore(
         client,
-		WithAccessMapName("access_tokens"),
-		WithRefreshMapName("refresh_tokens"),
-		WithCodesMapName("codes"),
+        WithAccessMapName("access_tokens"),
+        WithRefreshMapName("refresh_tokens"),
+        WithCodesMapName("codes"),
     )
     if err != nil {
         panic(err)
