@@ -11,13 +11,14 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       - image: circleci/golang:1.17-stretch
+      - image: hazelcast/hazelcast:4.2
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run:
-          name: Start Hazelcast Conatiner
-          command: docker run -d -p 5701:5701 --rm --name=hazelcast hazelcast/hazelcast:4.2
+      # - run:
+      #     name: Start Hazelcast Conatiner
+      #     command: docker run -d -p 5701:5701 --rm --name=hazelcast hazelcast/hazelcast:4.2
       - run:
           name: Generate Coverage Report
           command: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
