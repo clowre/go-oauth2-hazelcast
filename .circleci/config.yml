@@ -16,6 +16,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Start Hazelcast Conatiner
+          run: docker run -d -p 5701:5701 --rm --name=hazelcast hazelcast/hazelcast:4.2
+      - run:
           name: Generate Coverage Report
           command: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
       - run:
