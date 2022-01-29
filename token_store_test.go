@@ -11,6 +11,37 @@ import (
 	"github.com/hazelcast/hazelcast-go-client"
 )
 
+func TestConnection(t *testing.T) {
+
+	t.Log("testing with nil hazelcast client")
+	if _, err := NewTokenStore(nil); err == nil {
+		t.Fatal("expected to return an error on nil hc client")
+	}
+
+	t.Log("connecting to hc...")
+
+	ctx := context.Background()
+	hzClient, err := hazelcast.StartNewClient(ctx)
+	if err != nil {
+		t.Fatalf("failed to connect to hazelcast: %v", err)
+	}
+
+	t.Log("testing with ok hazelcast client...")
+	if _, err := NewTokenStore(hzClient); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log("disconnecting from hc")
+	if err := hzClient.Shutdown(ctx); err != nil {
+		t.Fatalf("hc client shutdown failed: %v", err)
+	}
+
+	t.Log("testing with disconnected hc client...")
+	if _, err := NewTokenStore(hzClient); err == nil {
+		t.Fatal("expected to return an error on a closed hazelcast client")
+	}
+}
+
 func TestHazelcastTokenStore(t *testing.T) {
 
 	ctx := context.Background()

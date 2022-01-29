@@ -1,5 +1,6 @@
 # Hazelcast store for [go-oauth2/oauth2](https://github.com/go-oauth2/oauth2)
 
+[![CircleCI](https://circleci.com/gh/clowre/go-oauth2-hazelcast/tree/main.svg?style=svg)](https://circleci.com/gh/clowre/go-oauth2-hazelcast/tree/main)
 [![codecov](https://codecov.io/gh/clowre/go-oauth2-hazelcast/branch/main/graph/badge.svg?token=LP3S45UPI2)](https://codecov.io/gh/clowre/go-oauth2-hazelcast)
 
 The store requires a runnig `*hazelcast.Client` to manage tokens and codes.
