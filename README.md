@@ -1,5 +1,7 @@
 # Hazelcast store for [go-oauth2/oauth2](https://github.com/go-oauth2/oauth2)
 
+[![codecov](https://codecov.io/gh/clowre/go-oauth2-hazelcast/branch/main/graph/badge.svg?token=LP3S45UPI2)](https://codecov.io/gh/clowre/go-oauth2-hazelcast)
+
 The store requires a runnig `*hazelcast.Client` to manage tokens and codes.
 
 ```go
@@ -26,9 +28,9 @@ func main() {
 
     store, err := hcstore.NewTokenStore(
         client,
-        WithAccessMapName("access_tokens"),
-        WithRefreshMapName("refresh_tokens"),
-        WithCodesMapName("codes"),
+        hcstore.WithAccessMapName("access_tokens"),
+        hcstore.WithRefreshMapName("refresh_tokens"),
+        hcstore.WithCodesMapName("codes"),
     )
     if err != nil {
         panic(err)
