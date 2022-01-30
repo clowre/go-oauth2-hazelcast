@@ -260,3 +260,6 @@ func (h *tokenStore) putCode(ctx context.Context, info oauth2.TokenInfo, raw str
 
 	return nil
 }
+
+// API Check
+var _ oauth2.TokenStore = (*tokenStore)(nil)
