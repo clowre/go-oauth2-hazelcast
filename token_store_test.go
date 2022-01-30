@@ -27,13 +27,19 @@ func TestConnection(t *testing.T) {
 	}
 
 	t.Log("testing with ok hazelcast client...")
-	if _, err := NewTokenStore(hzClient); err != nil {
+	store, err := NewTokenStore(hzClient)
+	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log("disconnecting from hc")
 	if err := hzClient.Shutdown(ctx); err != nil {
 		t.Fatalf("hc client shutdown failed: %v", err)
+	}
+
+	token := &models.Token{Access: "a", Code: "c", Refresh: "c"}
+	if err := store.Create(ctx, token); err == nil {
+		t.Fatal("expecting to return an error on closed hazelcast client")
 	}
 
 	t.Log("testing with disconnected hc client...")
@@ -64,6 +70,8 @@ func TestHazelcastTokenStore(t *testing.T) {
 	testAccessStorage(ctx, t, store)
 	testRefreshStorage(ctx, t, store)
 	testCodeStorage(ctx, t, store)
+
+	testStorageTTL(ctx, t, store)
 }
 
 func testAccessStorage(ctx context.Context, t *testing.T, store oauth2.TokenStore) {
@@ -166,4 +174,47 @@ func testCodeStorage(ctx context.Context, t *testing.T, store oauth2.TokenStore)
 	}
 
 	t.Log("code storage tested")
+}
+
+func testStorageTTL(ctx context.Context, t *testing.T, store oauth2.TokenStore) {
+
+	t.Log("testing TTL")
+
+	var (
+		code    = fmt.Sprintf("code_%d", time.Now().UnixMilli())
+		access  = fmt.Sprintf("access_%d", time.Now().UnixMilli())
+		refresh = fmt.Sprintf("refresh_%d", time.Now().UnixMilli())
+	)
+
+	token := &models.Token{
+		Code:             code,
+		CodeExpiresIn:    3 * time.Second,
+		Access:           access,
+		AccessExpiresIn:  6 * time.Second,
+		Refresh:          refresh,
+		RefreshExpiresIn: 9 * time.Second,
+	}
+
+	t.Log("saving tokens")
+	if err := store.Create(ctx, token); err != nil {
+		t.Fatalf("failed to store token: %v", err)
+	}
+
+	t.Log("testing auth code ttl")
+	time.Sleep(4 * time.Second)
+	if _, err := store.GetByCode(ctx, code); err == nil {
+		t.Fatal("auth code should be expired by now")
+	}
+
+	t.Log("testing access token ttl")
+	time.Sleep(4 * time.Second)
+	if _, err := store.GetByAccess(ctx, access); err == nil {
+		t.Fatal("access token should be expired by now")
+	}
+
+	t.Log("testing refresh token ttl")
+	time.Sleep(4 * time.Second)
+	if _, err := store.GetByRefresh(ctx, refresh); err == nil {
+		t.Fatal("refresh token should be expired by now")
+	}
 }
