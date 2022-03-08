@@ -154,7 +154,7 @@ func (h *tokenStore) GetByCode(ctx context.Context, code string) (oauth2.TokenIn
 
 	valString, ok := val.(string)
 	if !ok {
-		return nil, errors.Errorf("retrieved code information was a %s, string", reflect.TypeOf(val))
+		return nil, errors.Errorf("retrieved code information was a %s, not string", reflect.TypeOf(val))
 	}
 
 	token := models.NewToken()
@@ -180,7 +180,7 @@ func (h *tokenStore) GetByAccess(ctx context.Context, access string) (oauth2.Tok
 
 	valString, ok := val.(string)
 	if !ok {
-		return nil, errors.Errorf("retrieved access information was a %s, string", reflect.TypeOf(val))
+		return nil, errors.Errorf("retrieved access information was a %s, not string", reflect.TypeOf(val))
 	}
 
 	token := models.NewToken()
@@ -206,7 +206,7 @@ func (h *tokenStore) GetByRefresh(ctx context.Context, refresh string) (oauth2.T
 
 	valString, ok := val.(string)
 	if !ok {
-		return nil, errors.Errorf("retrieved access information was a %s, string", reflect.TypeOf(val))
+		return nil, errors.Errorf("retrieved access information was a %s, not string", reflect.TypeOf(val))
 	}
 
 	token := models.NewToken()
